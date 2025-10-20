@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USD to COP Exchange Rate Analysis - MyBambu</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #e8f4ff 0%, #f0f7ff 100%);
+            color: #050d30;
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 40px 20px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+        }
+
+        .header-emoji {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 48px;
+            color: #050d30;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 20px;
+            color: #5a7a8f;
+            margin-bottom: 30px;
+        }
+
+        .header-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, #27fb6b 0%, #1de05a 100%);
+            padding: 25px;
+            border-radius: 15px;
+            color: #050d30;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.95;
+            font-weight: 500;
+        }
+
+        .section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+        }
+
+        h2 {
+            font-size: 32px;
+            color: #050d30;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+        }
+
+        .comparison-table thead {
+            background: linear-gradient(135deg, #27fb6b 0%, #1de05a 100%);
+            color: #050d30;
+        }
+
+        .comparison-table th {
+            padding: 18px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .comparison-table td {
+            padding: 18px;
+            border-bottom: 1px solid #e8f4ff;
+        }
+
+        .comparison-table tbody tr:hover {
+            background: #f0f9ff;
+        }
+
+        .mybambu-row {
+            background: #e8f4ff !important;
+            font-weight: 600;
+        }
+
+        .insight-box {
+            background: linear-gradient(135deg, #e8f4ff 0%, #d4e8ff 100%);
+            border-left: 5px solid #27fb6b;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 25px 0;
+        }
+
+        .insight-box h3 {
+            color: #050d30;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .insight-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .insight-list li {
+            padding: 12px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .insight-list li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #27fb6b;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .scenario-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .scenario-card {
+            background: linear-gradient(135deg, #f8fcff 0%, #e8f4ff 100%);
+            border: 2px solid #27fb6b;
+            border-radius: 15px;
+            padding: 25px;
+            transition: transform 0.3s ease;
+        }
+
+        .scenario-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(39, 251, 107, 0.15);
+        }
+
+        .scenario-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #050d30;
+            margin-bottom: 10px;
+        }
+
+        .scenario-range {
+            font-size: 32px;
+            font-weight: 700;
+            color: #050d30;
+            margin: 15px 0;
+        }
+
+        .recommendation-box {
+            background: linear-gradient(135deg, #050d30 0%, #0a1550 100%);
+            color: white;
+            padding: 35px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+
+        .recommendation-box h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #27fb6b;
+        }
+
+        .recommendation-box ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .recommendation-box li {
+            padding: 12px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .recommendation-box li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #27fb6b;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .marketing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .copy-card {
+            background: #f8fcff;
+            border-left: 4px solid #27fb6b;
+            padding: 20px;
+            border-radius: 8px;
+            font-style: italic;
+            color: #050d30;
+        }
+
+        .takeaways {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .takeaway-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fcff 100%);
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid #e8f4ff;
+        }
+
+        .takeaway-emoji {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .takeaway-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #050d30;
+            margin-bottom: 12px;
+        }
+
+        .takeaway-text {
+            color: #5a7a8f;
+            line-height: 1.6;
+        }
+
+        .chart-placeholder {
+            background: #f8fcff;
+            border: 2px dashed #27fb6b;
+            border-radius: 10px;
+            padding: 60px;
+            text-align: center;
+            color: #5a7a8f;
+            margin: 30px 0;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 36px;
+            }
+            
+            .header-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .scenario-grid, .marketing-grid, .takeaways {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-emoji">💱</div>
+            <h1>Exchange Rate Analysis</h1>
+            <p class="subtitle">USD to Colombian Peso (COP) | October 2025</p>
+            
+            <div class="header-stats">
+                <div class="stat-box">
+                    <div class="stat-number">3,887.38</div>
+                    <div class="stat-label">MyBambu Average Rate<br>(July - October)</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">-3.87%</div>
+                    <div class="stat-label">Rate Change<br>(July to October)</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">$7.8B</div>
+                    <div class="stat-label">Projected US→Colombia<br>Remittances 2025</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Competitive Analysis -->
+        <div class="section">
+            <h2>📊 Competitive Rate Comparison</h2>
+            
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Provider</th>
+                        <th>July</th>
+                        <th>August</th>
+                        <th>September</th>
+                        <th>October</th>
+                        <th>% Change</th>
+                        <th>Overall Avg</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="mybambu-row">
+                        <td><strong>MyBambu</strong></td>
+                        <td>3,947.19</td>
+                        <td>3,947.36</td>
+                        <td>3,819.17</td>
+                        <td>3,794.31</td>
+                        <td>(3.87%)</td>
+                        <td>3,887.38</td>
+                    </tr>
+                    <tr>
+                        <td>Remitly</td>
+                        <td>3,923.21</td>
+                        <td>3,915.89</td>
+                        <td>3,790.02</td>
+                        <td>3,765.70</td>
+                        <td>(4.01%)</td>
+                        <td>3,859.05</td>
+                    </tr>
+                    <tr>
+                        <td>Western Union</td>
+                        <td>3,956.50</td>
+                        <td>3,963.31</td>
+                        <td>3,840.91</td>
+                        <td>3,804.03</td>
+                        <td>(3.85%)</td>
+                        <td>3,902.23</td>
+                    </tr>
+                    <tr>
+                        <td>Majority</td>
+                        <td>3,991.24</td>
+                        <td>3,983.65</td>
+                        <td>3,857.25</td>
+                        <td>3,832.52</td>
+                        <td>(3.98%)</td>
+                        <td>3,923.81</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="insight-box">
+                <h3>💡 Competitive Positioning</h3>
+                <ul class="insight-list">
+                    <li>MyBambu consistently ranks 2nd in conversion rates: Remitly < <strong>MyBambu</strong> < Western Union < Majority</li>
+                    <li>Our average rate of 3,887.38 COP per USD is competitive and in the middle of the market</li>
+                    <li>We offer better rates than Remitly (lowest in market) while maintaining strong margins</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Market Trends -->
+        <div class="section">
+            <h2>📉 Market Trends & Insights</h2>
+            
+            <div class="chart-placeholder">
+                <strong>COP Rate Trend July - October 2025</strong><br>
+                Consistent ~1% monthly decline across all providers
+            </div>
+
+            <div class="insight-box">
+                <h3>🔍 Key Market Observations</h3>
+                <ul class="insight-list">
+                    <li>The COP rate has been steadily trending downward throughout 2025</li>
+                    <li>Average decrease of approximately 1% per month across the tracking period (July-October)</li>
+                    <li>Rate changes are consistent among all competitors - indicating market-wide trends rather than competitive pressure</li>
+                    <li>MyBambu's rate decreased 3.87%, closely aligned with market average of 3.93%</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Future Projections -->
+        <div class="section">
+            <h2>🔮 2026 Projections</h2>
+            
+            <div class="scenario-grid">
+                <div class="scenario-card">
+                    <div class="scenario-title">Scenario A</div>
+                    <div>Moderate Peso Strength/Stability</div>
+                    <div class="scenario-range">3,700 – 3,900</div>
+                    <div style="font-size: 14px; color: #5a7a8f;">COP per USD</div>
+                </div>
+                
+                <div class="scenario-card">
+                    <div class="scenario-title">Scenario B</div>
+                    <div>Mild Peso Depreciation</div>
+                    <div class="scenario-range">4,000 – 4,200</div>
+                    <div style="font-size: 14px; color: #5a7a8f;">COP per USD</div>
+                </div>
+                
+                <div class="scenario-card">
+                    <div class="scenario-title">Scenario C</div>
+                    <div>Reversal / Dollar Rebound</div>
+                    <div class="scenario-range">4,100 – 4,300</div>
+                    <div style="font-size: 14px; color: #5a7a8f;">COP per USD</div>
+                </div>
+            </div>
+
+            <div class="insight-box">
+                <h3>💰 Remittance Market Projections</h3>
+                <ul class="insight-list">
+                    <li><strong>2025:</strong> $7.8 billion in total remittances from US to Colombia</li>
+                    <li><strong>2026:</strong> $7.3 - $8.5 billion projected (potential for growth)</li>
+                    <li>Market size represents significant opportunity for MyBambu's Colombia expansion</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Recommendations -->
+        <div class="section">
+            <h2>🎯 Strategic Recommendations</h2>
+            
+            <div class="recommendation-box">
+                <h3>Employ Competitive Dynamic Rate Strategy</h3>
+                <ul>
+                    <li>Industry standard practice: dynamic exchange rates (updated multiple times daily)</li>
+                    <li>Opportunity to offer more competitive rates now that TransNetwork fees are eliminated</li>
+                    <li>Maintain dynamic pricing to capitalize on favorable COP fluctuations</li>
+                    <li>Continue monitoring competitor rates to ensure market competitiveness</li>
+                    <li>Prepare contingency plans for unexpected market movements in 2026</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Marketing Plan -->
+        <div class="section">
+            <h2>📱 Colombia Launch Marketing Plan</h2>
+            
+            <h3 style="margin: 30px 0 20px 0; color: #050d30;">Recommended Copy (Spanish)</h3>
+            
+            <div class="marketing-grid">
+                <div class="copy-card">
+                    "Miles de colombianos ya confían en MiBambu."
+                </div>
+                <div class="copy-card">
+                    "Sin sorpresas. Sin comisiones ocultas. Lo que ves es lo que recibe tu familia."
+                </div>
+                <div class="copy-card">
+                    "Tu dinero llega rápido, sin vueltas."
+                </div>
+                <div class="copy-card">
+                    "Una buena tasa importa; la confianza lo es todo."
+                </div>
+            </div>
+
+            <div class="insight-box" style="margin-top: 40px;">
+                <h3>⚖️ Legal Guardrails (SIC Compliance)</h3>
+                <ul class="insight-list">
+                    <li>Avoid direct competitor comparisons and naming</li>
+                    <li>Include disclosure: "tasas sujetas a cambio"</li>
+                    <li>Display source and date for rate information</li>
+                    <li>Do not claim "best in market" without substantiation</li>
+                </ul>
+            </div>
+
+            <div style="margin-top: 40px;">
+                <h3 style="color: #050d30; margin-bottom: 20px;">Key Channels</h3>
+                <ul class="insight-list">
+                    <li><strong>Meta/TikTok:</strong> Video & carousel ads showcasing transparency and speed</li>
+                    <li><strong>Google Search:</strong> Capture high-intent users searching for remittance services</li>
+                    <li><strong>Influencers:</strong> Partner with Colombian diaspora creators</li>
+                    <li><strong>Community Outreach:</strong> Local events and partnerships</li>
+                </ul>
+            </div>
+
+            <div style="margin-top: 40px;">
+                <h3 style="color: #050d30; margin-bottom: 20px;">Launch KPIs</h3>
+                <ul class="insight-list">
+                    <li>CPA (Cost per Account)</li>
+                    <li>% of users who send money within 7 days</li>
+                    <li>Actual delivery time vs. promised</li>
+                    <li>Complaints about rates/fees</li>
+                    <li>NPS for remittance experience</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Key Takeaways -->
+        <div class="section">
+            <h2>🎯 Key Takeaways</h2>
+            
+            <div class="takeaways">
+                <div class="takeaway-card">
+                    <div class="takeaway-emoji">📊</div>
+                    <div class="takeaway-title">Competitive Positioning</div>
+                    <div class="takeaway-text">
+                        MyBambu offers the 2nd most competitive rate in the market, better than Remitly while maintaining healthy margins. Our 3,887 COP average positions us well for Colombia launch.
+                    </div>
+                </div>
+
+                <div class="takeaway-card">
+                    <div class="takeaway-emoji">📉</div>
+                    <div class="takeaway-title">Market Trends</div>
+                    <div class="takeaway-text">
+                        COP has declined ~1% monthly (3.9% total July-Oct). This trend is market-wide, not competitive pressure. Dynamic pricing will help us capitalize on favorable movements.
+                    </div>
+                </div>
+
+                <div class="takeaway-card">
+                    <div class="takeaway-emoji">💰</div>
+                    <div class="takeaway-title">Market Opportunity</div>
+                    <div class="takeaway-text">
+                        $7.8B remittance market in 2025 growing to $7.3-8.5B in 2026. Significant opportunity for MyBambu to capture share with competitive rates and transparent service.
+                    </div>
+                </div>
+
+                <div class="takeaway-card">
+                    <div class="takeaway-emoji">🚀</div>
+                    <div class="takeaway-title">Strategic Advantage</div>
+                    <div class="takeaway-text">
+                        With TransNetwork fees eliminated, we can offer more competitive rates while maintaining profitability. Dynamic pricing strategy positions us to respond to market changes quickly.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div style="text-align: center; padding: 40px; color: #5a7a8f;">
+            <p style="font-size: 14px;">MyBambu Paid Ads Team | October 2025</p>
+            <p style="font-size: 14px; margin-top: 10px;">Mafe Varon • Mili Paul • Matthew Lopez</p>
+        </div>
+    </div>
+</body>
+</html>
